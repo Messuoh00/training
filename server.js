@@ -14,6 +14,8 @@ const indexroute=require('./routes/index')
 
 const mongoose = require('mongoose')
 
+
+
 mongoose.connect(process.env.DATABASE_URL,{usenewURLparser: true})
 
 const db = mongoose.connection

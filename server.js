@@ -9,8 +9,11 @@ const app=express()
 
 const expresslayouts=require('express-ejs-layouts')
 
-const indexroute=require('./routes/index')
+const bodyparser = require('body-parser')
 
+const indexroute=require('./routes/index')
+const authorsroute=require('./routes/authors')
+const booksroute=require('./routes/books')
 
 const mongoose = require('mongoose')
 
@@ -30,6 +33,10 @@ app.set('layout','layouts/layout')
 app.use(expresslayouts)
 app.use(express.static('public'))
 
+app.use(bodyparser.urlencoded({limit:'20mb',extended: false}))
+
 app.use('/',indexroute)
+app.use('/authors',authorsroute)
+app.use('/books',booksroute)
 
 app.listen(process.env.PORT || 3000)

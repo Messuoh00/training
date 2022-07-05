@@ -4,21 +4,10 @@ const router=express.Router()
 const Books = require('../models/book')
 const Authors = require('../models/author')
 
-const path=require('path')
-const fs = require('fs')
 
-const uploadpath=path.join('public',Books.coverimgbasepath)
+
 const imgtypes=['image/jpeg','image/gif','image/png']
-const multer= require('multer')
-const { Console } = require('console')
 
-const upload=multer({
-    dest:uploadpath,
-    fileFilter:(req,file,callback)=>{
-        callback(null,imgtypes.includes(file.mimetype))
-    }
-    
-})
 
 
 
@@ -57,34 +46,33 @@ router.get('/new', async(req,res)=>{
 })
 
 
-router.post('/',upload.single('img') ,async (req,res)=>{
-
-    const filename =req.file!=null ? req.file.filename:null
+router.post('/',async (req,res)=>{
+  
+    res.redirect(req.body.title)
+    
     const book=new Books({
         name:req.body.title,
         author:req.body.author,
         pagenum:req.body.pageCount,
         datepub:new Date(req.body.publishDate),
         description:req.body.description,
-        img:filename,
+        
     })
 
-    try {
-        
-       
-        const newbook= await book.save()
-    
-      console.log(book.img)
+   
+    savecover(book,req.body.img)
 
-        res.redirect('books')
+    try {
+   
+      const newbook= await book.save()
+    
+      
+       res.redirect('books')
         
     } catch (error) {
         
-       if (book.img!=null) {
-        removebook(book.img)
-       }
        
-        
+        console.log(error)
         rendernewpage(res,book,true)
     }
     
@@ -110,9 +98,23 @@ async function  rendernewpage(res,book,haserr=false) {
 }
 
 
-function removebook(name) {
+
+
+function savecover(book,coverE) {
     
-    fs.unlink(path.join(uploadpath,name),err=> {if (err) Console.console.error(err) } )
+    if (coverE!=null) {
+        
+    const cover=JSON.parse(coverE)
+
+    if(cover!=null &&  imgtypes.includes(cover.type)) {
+
+        book.img=new Buffer.from(cover.data,'base64')
+
+        book.imgtype=cover.type
+    }
+    
+    }
+   
 }
 
 

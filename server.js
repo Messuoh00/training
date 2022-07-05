@@ -27,6 +27,7 @@ db.on('error',error=>console.error('error'))
 db.on('open',()=>console.log('rahi tmchi yay connected to mongogdb:)'))
 
 
+
 app.set('view engine','ejs')
 app.set('views',__dirname+'/views')
 app.set('layout','layouts/layout')

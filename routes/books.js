@@ -1,11 +1,7 @@
 const express= require('express')
 const router=express.Router()
-
 const Books = require('../models/book')
 const Authors = require('../models/author')
-
-
-
 const imgtypes=['image/jpeg','image/gif','image/png']
 
 
@@ -48,7 +44,7 @@ router.get('/new', async(req,res)=>{
 
 router.post('/',async (req,res)=>{
   
-    res.redirect(req.body.title)
+   
     
     const book=new Books({
         name:req.body.title,
@@ -59,11 +55,12 @@ router.post('/',async (req,res)=>{
         
     })
 
-   
-    savecover(book,req.body.img)
+  
+  
 
     try {
-   
+      
+      savecover(book,req.body.img)
       const newbook= await book.save()
     
       
@@ -100,17 +97,21 @@ async function  rendernewpage(res,book,haserr=false) {
 
 
 
-function savecover(book,coverE) {
-    
+function savecover(book, coverE) {
+  
     if (coverE!=null) {
+     
+     console.log(coverE)   
         
     const cover=JSON.parse(coverE)
-
+   
     if(cover!=null &&  imgtypes.includes(cover.type)) {
 
         book.img=new Buffer.from(cover.data,'base64')
 
         book.imgtype=cover.type
+
+ 
     }
     
     }

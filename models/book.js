@@ -52,9 +52,9 @@ const  bookSchema= new mongoose.Schema(
 )
 
 bookSchema.virtual('imgpath').get(function () {
-    if (this.img!=null) {
+    if (this.img!=null && this.imgtype!=null) {
         
-       return path.join('/',coverimgbasepath,this.img)
+       return `data:${this.imgtype};charset=utf-8;base64,${this.img.toString('base64')}`
     }
 })
 

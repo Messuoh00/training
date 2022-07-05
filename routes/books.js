@@ -59,7 +59,7 @@ router.post('/',async (req,res)=>{
   
 
     try {
-      
+        
       savecover(book,req.body.img)
       const newbook= await book.save()
     
@@ -99,10 +99,9 @@ async function  rendernewpage(res,book,haserr=false) {
 
 function savecover(book, coverE) {
   
-    if (coverE!=null) {
-     
-     console.log(coverE)   
-        
+    if (coverE==null) return
+    
+   
     const cover=JSON.parse(coverE)
    
     if(cover!=null &&  imgtypes.includes(cover.type)) {
@@ -114,7 +113,6 @@ function savecover(book, coverE) {
  
     }
     
-    }
    
 }
 
